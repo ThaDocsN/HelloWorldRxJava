@@ -1,20 +1,21 @@
 package com.thadocizn.helloworldrxjava;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
 import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String greeting = "Hello from RxJava";
+    private String greeting = "Hello from RxJava. We're using Disposable Observers";
     private Observable<String>myObservable;
-    private Observer<String>myObserver;
+    private DisposableObserver<String> myObserver;
     private TextView textView;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,12 +25,7 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.tvGeeting);
 
         myObservable = Observable.just(greeting);
-        myObserver = new Observer<String>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-                Log.i("Charles", "on subscribe invoked");
-            }
-
+        myObserver = new DisposableObserver<String>() {
             @Override
             public void onNext(String s) {
 
@@ -51,5 +47,11 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         myObservable.subscribe(myObserver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        myObserver.dispose();
     }
 }
