@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity {
@@ -14,8 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private Observable<String>myObservable;
     private DisposableObserver<String> myObserver;
     private TextView textView;
-
-
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +46,14 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
+        compositeDisposable.add(myObserver);
         myObservable.subscribe(myObserver);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        myObserver.dispose();
+        compositeDisposable.dispose();
+       // myObserver.dispose();
     }
 }
