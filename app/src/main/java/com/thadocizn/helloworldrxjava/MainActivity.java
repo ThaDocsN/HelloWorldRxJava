@@ -53,7 +53,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        compositeDisposable.dispose();
+
+        //compositeDisposable.dispose();//cant add more disposables
+
+        // if you want to add more disposables use clear method
+        compositeDisposable.clear();
+
        // myObserver.dispose();
     }
 }
