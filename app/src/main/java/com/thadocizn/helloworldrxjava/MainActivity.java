@@ -11,7 +11,7 @@ import io.reactivex.observers.DisposableObserver;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String greeting = "Hello from RxJava. We're using Disposable Observers";
+    private String greeting = "Hello from RxJava. We're using Composite Disposable";
     private Observable<String>myObservable;
     private DisposableObserver<String> myObserver;
     private TextView textView;
