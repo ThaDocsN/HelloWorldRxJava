@@ -28,13 +28,6 @@ public class MainActivity extends AppCompatActivity {
 
         myObservable = Observable.just(greeting);
 
-        myObservable.subscribeOn(Schedulers.io()); //limitless thread pool
-        myObservable.observeOn(AndroidSchedulers.mainThread()); //main thread
-        /*myObservable.subscribeOn(Schedulers.newThread()); //creates a new thread
-        myObservable.subscribeOn(Schedulers.single()); // has a single thread handling task right after another
-        myObservable.subscribeOn(Schedulers.trampoline()); //fifo, recurring tasks
-        myObservable.subscribeOn(Schedulers.from(Executor executor)); //creates and return custom scheduler
-        */
         myObserver = new DisposableObserver<String>() {
             @Override
             public void onNext(String s) {
@@ -56,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
-        compositeDisposable.add(myObserver);
-        myObservable.subscribe(myObserver);
+        compositeDisposable.add(myObservable.subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeWith(myObserver));
     }
 
     @Override
