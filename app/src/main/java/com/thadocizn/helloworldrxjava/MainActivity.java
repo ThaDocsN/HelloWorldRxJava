@@ -11,6 +11,7 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Function;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
@@ -40,6 +41,13 @@ public class MainActivity extends AppCompatActivity {
 
         compositeDisposable.add(myObservable.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
+                .map(new Function<Student, Student>() {
+                    @Override
+                    public Student apply(Student student) throws Exception {
+                        student.setName(student.getName().toUpperCase());
+                        return student;
+                    }
+                })
         .subscribeWith(getObservable())
         );
     }
@@ -50,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
             public void onNext(Student s) {
 
 
-                Log.i("Charles", "on next invoked" + s.getEmail());
+                Log.i("Charles", "on next invoked" + s.getName());
 
             }
 
