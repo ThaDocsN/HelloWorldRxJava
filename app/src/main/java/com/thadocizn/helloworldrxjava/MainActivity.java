@@ -6,8 +6,10 @@ import android.util.Log;
 import android.widget.TextView;
 
 import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +27,14 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.tvGeeting);
 
         myObservable = Observable.just(greeting);
+
+        myObservable.subscribeOn(Schedulers.io()); //limitless thread pool
+        myObservable.observeOn(AndroidSchedulers.mainThread()); //main thread
+        /*myObservable.subscribeOn(Schedulers.newThread()); //creates a new thread
+        myObservable.subscribeOn(Schedulers.single()); // has a single thread handling task right after another
+        myObservable.subscribeOn(Schedulers.trampoline()); //fifo, recurring tasks
+        myObservable.subscribeOn(Schedulers.from(Executor executor)); //creates and return custom scheduler
+        */
         myObserver = new DisposableObserver<String>() {
             @Override
             public void onNext(String s) {
