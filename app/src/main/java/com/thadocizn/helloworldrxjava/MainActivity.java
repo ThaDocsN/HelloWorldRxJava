@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
@@ -41,11 +42,17 @@ public class MainActivity extends AppCompatActivity {
 
         compositeDisposable.add(myObservable.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-                .map(new Function<Student, Student>() {
+                .flatMap(new Function<Student, ObservableSource<?>>() {
                     @Override
-                    public Student apply(Student student) throws Exception {
+                    public ObservableSource<?> apply(Student student) throws Exception {
+                        Student student1=new Student();
+                        student1.setName(student.getName());
+
+                        Student student2=new Student();
+                        student2.setName("New member "+student.getName());
+
                         student.setName(student.getName().toUpperCase());
-                        return student;
+                        return Observable.just(student,student1,student2);
                     }
                 })
         .subscribeWith(getObservable())
