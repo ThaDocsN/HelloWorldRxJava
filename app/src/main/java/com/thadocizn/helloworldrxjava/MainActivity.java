@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         compositeDisposable.add(myObservable.subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(new Function<Student, ObservableSource<?>>() {
+                .concatMap(new Function<Student, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(Student student) throws Exception {
                         Student student1=new Student();
