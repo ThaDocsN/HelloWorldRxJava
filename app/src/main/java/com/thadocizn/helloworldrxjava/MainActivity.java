@@ -2,73 +2,129 @@ package com.thadocizn.helloworldrxjava;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.util.Log;
 
-import com.jakewharton.rxbinding2.view.RxView;
-import com.jakewharton.rxbinding2.widget.RxTextView;
-
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.AsyncSubject;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG  = "Charles";
 
-    private EditText inputText;
-    private TextView viewText;
-    private Button clearButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        asyncSubject();
+    }
 
-        inputText = findViewById(R.id.etInputField);
-        viewText = findViewById(R.id.tvInput);
-        clearButton = findViewById(R.id.btnClear);
-        /*inputText.addTextChangedListener(new TextWatcher() {
+    void asyncSubject(){
+
+        Observable<String> observable = Observable.just("JAVA", "KOTLIN" , "XML", "JSON")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        AsyncSubject<String> asyncSubject = AsyncSubject.create();
+        observable.subscribe(asyncSubject);
+
+        asyncSubject.subscribe(getFirstObserver());
+        asyncSubject.subscribe(getSecondObserver());
+        asyncSubject.subscribe(getThirdObserver());
+    }
+
+    private Observer<String > getFirstObserver(){
+        Observer<String >observer = new Observer<String>() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void onSubscribe(Disposable d) {
+                Log.i(TAG, " First Observer onSubscribe ");
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                viewText.setText(s);
+            public void onNext(String s) {
+                Log.i(TAG, " First Observer Received " + s);
+
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void onError(Throwable e) {
+                Log.i(TAG, " First Observer onError ");
 
             }
-        });
 
-       clearButton.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               inputText.setText(" ");
-               viewText.setText(" ");
-           }
-       });*/
+            @Override
+            public void onComplete() {
+                Log.i(TAG, " First Observer onComplete ");
 
-        Disposable disposable = RxTextView.textChanges(inputText)
-                .subscribe(new Consumer<CharSequence>() {
-                    @Override
-                    public void accept(CharSequence charSequence) throws Exception {
-                        viewText.setText(charSequence);
-                    }
-                });
+            }
+        };
 
-        Disposable disposable1 = RxView.clicks(clearButton)
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        inputText.setText("");
-                        viewText.setText("");
-                    }
-                });
+        return observer;
+    }
+
+    private Observer<String > getSecondObserver(){
+        Observer<String >observer = new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.i(TAG, " Second Observer onSubscribe ");
+
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.i(TAG, " Second Observer Received " + s);
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i(TAG, " Second Observer onError ");
+
+            }
+
+            @Override
+            public void onComplete() {
+                Log.i(TAG, " Second Observer onComplete ");
+
+            }
+        };
+
+        return observer;
+    }
+
+    private Observer<String > getThirdObserver(){
+        Observer<String >observer = new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.i(TAG, " Third Observer onSubscribe ");
+
+            }
+
+            @Override
+            public void onNext(String s) {
+                Log.i(TAG, " Third Observer Received " + s);
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.i(TAG, " Third Observer onError ");
+
+            }
+
+            @Override
+            public void onComplete() {
+                Log.i(TAG, " Third Observer onComplete ");
+
+            }
+        };
+
+        return observer;
     }
 }
