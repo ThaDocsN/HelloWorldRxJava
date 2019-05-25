@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         numbersObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .skip(6)
+                .skipLast(6)
                 .subscribe(new Observer<Integer>() {
                     @Override
                     public void onSubscribe(Disposable d) {
