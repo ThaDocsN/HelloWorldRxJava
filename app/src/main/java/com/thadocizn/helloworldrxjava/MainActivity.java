@@ -2,51 +2,73 @@ package com.thadocizn.helloworldrxjava;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
+import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.functions.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG  = "Charles";
+
+    private EditText inputText;
+    private TextView viewText;
+    private Button clearButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Observable<Integer> numbersObservable = Observable.just(1, 2, 3, 7, 5, 3, 5, 5, 4, 4);
 
-        numbersObservable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .skipLast(6)
-                .subscribe(new Observer<Integer>() {
+        inputText = findViewById(R.id.etInputField);
+        viewText = findViewById(R.id.tvInput);
+        clearButton = findViewById(R.id.btnClear);
+        /*inputText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                viewText.setText(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+       clearButton.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               inputText.setText(" ");
+               viewText.setText(" ");
+           }
+       });*/
+
+        Disposable disposable = RxTextView.textChanges(inputText)
+                .subscribe(new Consumer<CharSequence>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(Integer integer) {
-                        Log.i(TAG, "came to onNext " + integer);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                        Log.i(TAG, "came to onComplete ");
+                    public void accept(CharSequence charSequence) throws Exception {
+                        viewText.setText(charSequence);
                     }
                 });
 
+        Disposable disposable1 = RxView.clicks(clearButton)
+                .subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        inputText.setText("");
+                        viewText.setText("");
+                    }
+                });
     }
 }
