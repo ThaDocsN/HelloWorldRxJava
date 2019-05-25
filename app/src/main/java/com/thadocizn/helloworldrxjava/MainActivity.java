@@ -8,7 +8,6 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,16 +19,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Observable<Integer> myObservable = Observable.range(1, 20);
-        myObservable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .filter(new Predicate<Integer>() {
-                    @Override
-                    public boolean test(Integer integer) throws Exception {
+        Observable<Integer> numbersObservable = Observable.just(1,2, 3, 7, 5, 3, 5, 5, 4, 4);
 
-                        return integer%3==0;
-                    }
-                })
+        numbersObservable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .distinct()
                 .subscribe(new Observer<Integer>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -38,9 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(Integer integer) {
-
-                        Log.i(TAG," onNext invoked "+integer);
-
+                        Log.i(TAG,"came to onNext "+integer);
                     }
 
                     @Override
@@ -51,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete() {
 
-                        Log.i(TAG," onComplete invoked ");
+                        Log.i(TAG,"came to onComplete ");
                     }
                 });
 
