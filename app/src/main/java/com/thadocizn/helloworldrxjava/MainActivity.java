@@ -19,12 +19,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Observable<Integer> numbersObservable = Observable.just(1,2, 3, 7, 5, 3, 5, 5, 4, 4);
+        Observable<Integer> numbersObservable = Observable.just(1, 2, 3, 7, 5, 3, 5, 5, 4, 4);
 
         numbersObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .distinct()
+                .skip(6)
                 .subscribe(new Observer<Integer>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(Integer integer) {
-                        Log.i(TAG,"came to onNext "+integer);
+                        Log.i(TAG, "came to onNext " + integer);
                     }
 
                     @Override
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete() {
 
-                        Log.i(TAG,"came to onComplete ");
+                        Log.i(TAG, "came to onComplete ");
                     }
                 });
 
