@@ -9,7 +9,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.ReplaySubject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,43 +21,44 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        publishSubjectDemo2();
+        replaySubjectDemo2();
     }
 
-    void publishSubjectDemo1() {
+    void replaySubjectDemo1() {
 
         Observable<String> observable = Observable.just("JAVA", "KOTLIN", "XML", "JSON")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        PublishSubject<String> publishSubject = PublishSubject.create();
+        ReplaySubject<String> replaySubject = ReplaySubject.create();
 
-        observable.subscribe(publishSubject);
+        observable.subscribe(replaySubject);
 
-        publishSubject.subscribe(getFirstObserver());
-        publishSubject.subscribe(getSecondObserver());
-        publishSubject.subscribe(getThirdObserver());
+        replaySubject.subscribe(getFirstObserver());
+        replaySubject.subscribe(getSecondObserver());
+        replaySubject.subscribe(getThirdObserver());
 
 
     }
 
-    void publishSubjectDemo2() {
+
+    void replaySubjectDemo2() {
 
 
-        PublishSubject<String> publishSubject = PublishSubject.create();
+        ReplaySubject<String> replaySubject = ReplaySubject.create();
 
-        publishSubject.subscribe(getFirstObserver());
+        replaySubject.subscribe(getFirstObserver());
 
-        publishSubject.onNext("JAVA");
-        publishSubject.onNext("KOTLIN");
-        publishSubject.onNext("XML");
+        replaySubject.onNext("JAVA");
+        replaySubject.onNext("KOTLIN");
+        replaySubject.onNext("XML");
 
-        publishSubject.subscribe(getSecondObserver());
+        replaySubject.subscribe(getSecondObserver());
 
-        publishSubject.onNext("JSON");
-        publishSubject.onComplete();
+        replaySubject.onNext("JSON");
+        replaySubject.onComplete();
 
-        publishSubject.subscribe(getThirdObserver());
+        replaySubject.subscribe(getThirdObserver());
 
 
     }
