@@ -9,7 +9,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.AsyncSubject;
+import io.reactivex.subjects.BehaviorSubject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,21 +21,45 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        asyncSubject();
+        behaviorSubjectDemo2();
     }
 
-    void asyncSubject(){
+    void behaviorSubjectDemo2() {
 
-        Observable<String> observable = Observable.just("JAVA", "KOTLIN" , "XML", "JSON")
+
+        BehaviorSubject<String> behaviorSubject = BehaviorSubject.create();
+
+        behaviorSubject.subscribe(getFirstObserver());
+
+        behaviorSubject.onNext("JAVA");
+        behaviorSubject.onNext("KOTLIN");
+        behaviorSubject.onNext("XML");
+
+        behaviorSubject.subscribe(getSecondObserver());
+
+        behaviorSubject.onNext("JSON");
+        behaviorSubject.onComplete();
+
+        behaviorSubject.subscribe(getThirdObserver());
+
+
+    }
+
+    void behaviorSubjectDemo1() {
+
+        Observable<String> observable = Observable.just("JAVA", "KOTLIN", "XML", "JSON")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        AsyncSubject<String> asyncSubject = AsyncSubject.create();
-        observable.subscribe(asyncSubject);
+        BehaviorSubject<String> behaviorSubject = BehaviorSubject.create();
 
-        asyncSubject.subscribe(getFirstObserver());
-        asyncSubject.subscribe(getSecondObserver());
-        asyncSubject.subscribe(getThirdObserver());
+        observable.subscribe(behaviorSubject);
+
+        behaviorSubject.subscribe(getFirstObserver());
+        behaviorSubject.subscribe(getSecondObserver());
+        behaviorSubject.subscribe(getThirdObserver());
+
+
     }
 
     private Observer<String > getFirstObserver(){
