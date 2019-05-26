@@ -9,7 +9,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,43 +21,43 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        behaviorSubjectDemo2();
+        publishSubjectDemo2();
     }
 
-    void behaviorSubjectDemo2() {
-
-
-        BehaviorSubject<String> behaviorSubject = BehaviorSubject.create();
-
-        behaviorSubject.subscribe(getFirstObserver());
-
-        behaviorSubject.onNext("JAVA");
-        behaviorSubject.onNext("KOTLIN");
-        behaviorSubject.onNext("XML");
-
-        behaviorSubject.subscribe(getSecondObserver());
-
-        behaviorSubject.onNext("JSON");
-        behaviorSubject.onComplete();
-
-        behaviorSubject.subscribe(getThirdObserver());
-
-
-    }
-
-    void behaviorSubjectDemo1() {
+    void publishSubjectDemo1() {
 
         Observable<String> observable = Observable.just("JAVA", "KOTLIN", "XML", "JSON")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
-        BehaviorSubject<String> behaviorSubject = BehaviorSubject.create();
+        PublishSubject<String> publishSubject = PublishSubject.create();
 
-        observable.subscribe(behaviorSubject);
+        observable.subscribe(publishSubject);
 
-        behaviorSubject.subscribe(getFirstObserver());
-        behaviorSubject.subscribe(getSecondObserver());
-        behaviorSubject.subscribe(getThirdObserver());
+        publishSubject.subscribe(getFirstObserver());
+        publishSubject.subscribe(getSecondObserver());
+        publishSubject.subscribe(getThirdObserver());
+
+
+    }
+
+    void publishSubjectDemo2() {
+
+
+        PublishSubject<String> publishSubject = PublishSubject.create();
+
+        publishSubject.subscribe(getFirstObserver());
+
+        publishSubject.onNext("JAVA");
+        publishSubject.onNext("KOTLIN");
+        publishSubject.onNext("XML");
+
+        publishSubject.subscribe(getSecondObserver());
+
+        publishSubject.onNext("JSON");
+        publishSubject.onComplete();
+
+        publishSubject.subscribe(getThirdObserver());
 
 
     }
